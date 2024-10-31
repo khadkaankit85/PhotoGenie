@@ -1,25 +1,18 @@
 import sharp from "sharp";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(req: Request) {
   try {
-    // const buffer = await req.arrayBuffer();
+    // Decode ArrayBuffer to Buffer directly for sharp
+    const arrayBuffer = await req.arrayBuffer();
+    const buffer = Buffer.from(new Uint8Array(arrayBuffer));
+    console.log(buffer);
 
-    const resizedBuffer = await sharp(
-      Buffer.from(
-        "https://react-dropzone.js.org/71afa465-cd1c-4dc1-9e08-a901a954f78d"
-      )
-    )
-      .resize({ width: 600, height: 600 })
-      .toBuffer();
-    console.log("img received");
 
-    return new Response(resizedBuffer, {
+    return new Response("hello", {
       headers: { "Content-Type": "image/jpeg" },
     });
   } catch (e) {
-    console.clear();
-    console.log("some error", e);
-    return new Response("error happened");
+    console.error("Error processing image:");
+    return new Response("Unsupported image format or processing error", { status: 500 });
   }
 }

@@ -16,11 +16,15 @@ function Droppable() {
         reader.onload = async () => {
           if (!reader.result || typeof reader.result !== "string") return;
           const base64Image = reader.result.split(",")[1];
-          await fetch("/api/editimg", {
+        const imagebufferReq=  await fetch("/api/editimg", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ image: base64Image }),
           });
+           const img:{
+               image:string
+           }= await imagebufferReq.json();
+           setFile({preview:img.image})
         };
         reader.readAsDataURL(newFile);
         setFile({ preview: URL.createObjectURL(newFile) });
